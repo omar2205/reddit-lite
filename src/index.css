@@ -37,14 +37,14 @@ nav p {
 }
 
 .posts-list img {
-  width: 75vw;
+  width: 90vw;
   max-width: 500px;
 }
 
 .post {
   margin: 3rem;
 }
-.post a {
+a {
   color: inherit;
   text-decoration: none;
 }
@@ -63,5 +63,5 @@ nav p {
   margin-top: 4px;
   margin-bottom: 1rem;
   color: #777;
-  font-size: 1.5vmin;
+  font-size: 0.8rem;
 }

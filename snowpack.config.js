@@ -4,7 +4,10 @@ module.exports = {
 //    src: '/dist'
   },
   plugins: [
-    /* ... */
+    ['@snowpack/plugin-webpack', {
+      sourceMap: false,
+      out: '/dist'
+    }]
   ],
   routes: [
     /* Enable an SPA Fallback in development: */

@@ -3,16 +3,6 @@ import React, { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Post from './components/Post'
 
-const memes_demo = [
-/*
-  {
-    id: 'l8cvib', upvotes: '11.5K', comments: '48',
-    title: 'I got my money on Rocky Potter',
-    img: 'https://i.redd.it/gcp36l4m4ee61.jpg'
-  }
-*/
-]
-
 const roundNumbers = n =>
   Math.abs(n) > 999
     ? Math.sign(n) * (Math.abs(n) / 1000).toFixed(1) + 'K'
@@ -32,26 +22,49 @@ const fetch_sub_info = async sub => {
     .then(res => res.data.title)
 }
 
+const getLastElement = array => array[array.length - 1]
+
 const App = () => {
   const [subreddit, setSubreddit] = useState(null)
   const [subtitle, setSubTitle] = useState(null)
   const [rawData, setRawData] = useState(null)
+  const [lastId, setLastId] = useState(null)
 
   useEffect(async () => {
-    setSubreddit(location.pathname.split('/r/')[1] || 'memes')
-    setSubTitle(await fetch_sub_info(subreddit))
-    setRawData(await fetch_reddit(subreddit))
-    console.log(await rawData)
+    // parse subreddit name from url
+    if (location.pathname.slice(3).endsWith('/')) {
+      setSubreddit(location.pathname.slice(3, location.pathname.length - 1))
+    } else if (location.pathname === '/') {
+      setSubreddit('memes')
+    } else {
+      setSubreddit(location.pathname.slice(3))
+    }
+    if(subreddit)
+      setSubTitle(await fetch_sub_info(subreddit)) // fetch subreddit title
+    // if we have an id in the URL.. remove ?id string
+    if (location.search.slice(4)) {
+      if(subreddit)
+        setRawData(await fetch_reddit(subreddit, location.search.slice(4))) // fetch subreddit posts
+    } else {
+      if(subreddit)
+        setRawData(await fetch_reddit(subreddit)) // fetch subreddit posts
+    }
   }, [subreddit])
+
+  useEffect(async () => {
+    try {
+      setLastId(getLastElement(rawData.data.children).data.id)
+    } catch (err) {}
+    window.scrollTo(0, 1)
+  }, [rawData])
 
   return (
     <>
-      <Header />
-      <h1 className="sub-title">{ subtitle }</h1>
+      <Header lastid={lastId} />
+      <a href={location.pathname}><h1 className="sub-title">{ subtitle }</h1></a>
       <div className="posts-list">
         { rawData &&
-            rawData.data.children.map(d => <Post data={d} /> )}
-        { memes_demo.map(meme => <Meme data={meme} key={meme.id} />)}
+            rawData.data.children.map(d => <Post data={d} key={d.data.id} /> )}
       </div>
     </>
   )
