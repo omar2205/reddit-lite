@@ -19,7 +19,10 @@ const fetch_sub_info = async sub => {
   let url = `https://www.reddit.com/r/${sub}/about/.json`
   return fetch(url)
     .then(raw => raw.json())
-    .then(res => res.data.title)
+    .then(res => { 
+      document.title = res.data.title
+      return res.data.title 
+    })
 }
 
 const getLastElement = array => array[array.length - 1]
@@ -55,12 +58,12 @@ const App = () => {
     try {
       setLastId(getLastElement(rawData.data.children).data.id)
     } catch (err) {}
-    window.scrollTo(0, 1)
+    window.scrollTo(0, 5)
   }, [rawData])
 
   return (
     <>
-      <Header lastid={lastId} />
+      <Header subreddit={subreddit} lastid={lastId} />
       <a href={location.pathname}><h1 className="sub-title">{ subtitle }</h1></a>
       <div className="posts-list">
         { rawData &&

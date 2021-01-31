@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import PostFrame from './PostFrame'
 
 // round numbers, 1200 => 1.2K
 const roundNumbers = n =>
@@ -7,6 +8,7 @@ const roundNumbers = n =>
     : Math.sign(n) * Math.abs(n)
 
 const Post = props => {
+  const [showPost, setShowPost] = useState(false)
   const { data: { data } } = props
 
   const rounded_n_comments = roundNumbers(data.num_comments)
@@ -20,12 +22,23 @@ const Post = props => {
     return <a href={"https://old.reddit.com"+data.permalink}><img src={data.thumbnail} /></a>
   }
 
+  const closePost = () => setShowPost(false)
+  const handleClick = e => {
+    if(e.button === 0) {
+      e.preventDefault()
+      setShowPost(true)
+    } 
+  }
+
   return (
-    <div className="post">
-      <a href={"https://old.reddit.com"+data.permalink}><h2 className="post-title">{ data.title }</h2></a>
-      <p>{ data.id } - { rounded_n_ups } - { rounded_n_comments }</p>
-      { post() }
-    </div>
+    <>
+      { showPost && <PostFrame url={"https://old.reddit.com"+data.permalink} close={closePost} /> }
+      <div className="post" onMouseDown={handleClick} >
+        <a href={"https://old.reddit.com"+data.permalink}><h2 className="post-title">{ data.title }</h2></a>
+        <p>{ data.id } - { rounded_n_ups } - { rounded_n_comments }</p>
+        { post() }
+      </div>
+    </>
   )
 }
 

@@ -6,7 +6,6 @@ module.exports = {
   plugins: [
     ['@snowpack/plugin-webpack', {
       sourceMap: false,
-      out: '/dist'
     }]
   ],
   routes: [
@@ -24,6 +23,5 @@ module.exports = {
     open: 'none'
   },
   buildOptions: {
-    /* ... */
   },
 };
