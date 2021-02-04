@@ -16,10 +16,10 @@ const Post = props => {
 
   const post = () => {
     if (data.post_hint === 'image')
-      return <a href={data.url}><img src={ data.url } alt={ data.title } /></a>
+      return <a href={data.url}><img loading="lazy" src={ data.url } alt={ data.title } /></a>
     if (data.post_hint === 'hosted:video')
-      return <a href={"https://old.reddit.com"+data.permalink}><img src={data.thumbnail} /></a>
-    return <a href={"https://old.reddit.com"+data.permalink}><img src={data.thumbnail} /></a>
+      return <a href={"https://old.reddit.com"+data.permalink}><img loading="lazy" src={data.thumbnail} /></a>
+    return <a href={"https://old.reddit.com"+data.permalink}><img loading="lazy" src={data.thumbnail} /></a>
   }
 
   const closePost = () => setShowPost(false)
